@@ -5,10 +5,7 @@ export async function GET(request: Request) {
   const targetUrl = searchParams.get('url');
 
   if (!targetUrl) {
-    return NextResponse.json(
-      { error: 'URLが指定されていません' },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: 'URLが指定されていません' }, { status: 400 });
   }
 
   try {
@@ -23,21 +20,15 @@ export async function GET(request: Request) {
     let text = decoder.decode(arrayBuffer);
 
     // 青空文庫の冒頭にある「底本情報」などのヘッダー部分を切り落として本文だけにする
-    const headerSplit = text.split(
-      '--------------------------------------------------\n'
-    );
+    const headerSplit = text.split('--------------------------------------------------\n');
     if (headerSplit.length >= 3) {
-      text = headerSplit
-        .slice(2)
-        .join('--------------------------------------------------\n');
+      text = headerSplit.slice(2).join('--------------------------------------------------\n');
     }
 
     return NextResponse.json({ text });
+
   } catch (error) {
     console.error('API Error:', error);
-    return NextResponse.json(
-      { error: 'サーバー処理中にエラーが発生しました' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'サーバー処理中にエラーが発生しました' }, { status: 500 });
   }
 }
